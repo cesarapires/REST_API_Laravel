@@ -15,6 +15,8 @@ return new class extends Migration
     {
         Schema::create('real_state', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('user_id');
+
             $table->string('title');
             $table->string('description');
             $table->text('content');
@@ -24,7 +26,10 @@ return new class extends Migration
             $table->integer('property_area',);
             $table->integer('total_property_area',);
             $table->string('slug');
+
             $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 
