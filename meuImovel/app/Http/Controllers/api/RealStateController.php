@@ -18,4 +18,8 @@ class RealStateController extends Controller{
         $realState = $this->realState->paginate(10);
         return response()->json($realState, 200);
     }
+
+    public function store(Request $request){
+        return response()->json($request->all(), 200);
+    }
 }
