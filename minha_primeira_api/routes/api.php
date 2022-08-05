@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ProductsController;
+use App\Http\Controllers\Api\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,11 +24,15 @@ route::get('/test', function(){
     return ['msg' => 'Minha primeira respota da api'];
 });
 
-//Products Route
-Route::namespace('Api')->prefix('products')->group(function(){
-    Route::get('/', [ProductsController::class, 'index']);
-    Route::get('/{id}', [ProductsController::class, 'show']);
-    Route::post('/', [ProductsController::class, 'save']);
-    Route::put('/{id}', [ProductsController::class, 'update']);
-    Route::delete('/{id}', [ProductsController::class, 'delete']);
+Route::namespace('Api')->group(function(){
+    //Products Route
+    Route::prefix('products')->group(function(){
+        Route::get('/', [ProductsController::class, 'index']);
+        Route::get('/{id}', [ProductsController::class, 'show'])->middleware('auth.basic');
+        Route::post('/', [ProductsController::class, 'save']);
+        Route::put('/{id}', [ProductsController::class, 'update']);
+        Route::delete('/{id}', [ProductsController::class, 'delete']);
+    });
+
 });
+Route::resource('users', UserController::class);

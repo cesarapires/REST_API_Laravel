@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ProductRequest;
+use App\Http\Resources\ProductCollection;
+use App\Repository\ProductRepository;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Http\Resources\ProductResource;
 
 class productsController extends Controller
 {
@@ -14,9 +18,23 @@ class productsController extends Controller
         $this->product = $product;
     }
 
-    public function index() {
-        $products = $this->product->all();
-        return response()->json($products);
+    public function index(Request $request) {
+
+        $products = $this->product;
+
+
+
+       $productRepository = new ProductRepository($products);
+        if ($request->has('conditions')){
+            $productRepository->selectConditions($request->get('conditions'));
+        }
+
+        if ($request->has('fields')) {
+            $productRepository->selectFilter($request->get('fields'));
+        }
+
+//        return new ProductCollection($products->paginate(10));
+        return response()->json($productRepository->getResult()->paginate(10));
     }
 
     public function show($id) {
@@ -24,13 +42,13 @@ class productsController extends Controller
         return response()->json($product);
     }
 
-    public function save(Request $request){
+    public function save(ProductRequest $request){
         $data = $request->all();
         $product = $this->product->create($data);
         return response()->json($product);
     }
 
-    public function update($id, Request $request){
+    public function update($id, ProductRequest $request){
         $data = $request->all();
         $product = $this->product->find($id);
         $product->update($data);
