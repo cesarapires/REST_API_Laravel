@@ -20,6 +20,19 @@ class RealStateController extends Controller{
     }
 
     public function store(Request $request){
+        $data = $request->all();
+
+        try {
+            $realState = $this->realState->create($data);
+           return response()->json([
+               'data'=>[
+                   'msg'=>'Imóvel Cadastrado com sucesso!'
+               ]
+           ], 200);
+        }catch (\Exception $e){
+            return response()->json(['error' => $e->getMessage()]);
+        }
+
         return response()->json($request->all(), 200);
     }
 }
