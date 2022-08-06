@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\RealStateRequest;
 use App\Models\RealState;
 use Illuminate\Http\Request;
 
@@ -29,7 +30,7 @@ class RealStateController extends Controller{
         return response()->json(['data'=>$realState], 200);
     }
 
-    public function store(Request $request){
+    public function store(RealStateRequest $request){
         $data = $request->all();
 
 
@@ -47,7 +48,7 @@ class RealStateController extends Controller{
         return response()->json($request->all(), 200);
     }
 
-    public function update($real_state_id, Request $request){
+    public function update($real_state_id, RealStateRequest $request){
         $data = $request->all();
         try {
             $realState = $this->realState->findOrFail($real_state_id);
