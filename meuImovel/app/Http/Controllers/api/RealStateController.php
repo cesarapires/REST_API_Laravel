@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\api;
 
+use App\Exceptions\ApiMessages;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\RealStateRequest;
 use App\Models\RealState;
@@ -10,12 +11,11 @@ use Illuminate\Http\Request;
 class RealStateController extends Controller{
     private $realState;
 
-    public function __construct(RealState $realState)
-    {
+    public function __construct(RealState $realState){
         $this->realState = $realState;
     }
 
-    public function index() {
+    public function index(){
         $realState = $this->realState->paginate(10);
         return response()->json($realState, 200);
     }
@@ -24,16 +24,14 @@ class RealStateController extends Controller{
         try {
             $realState = $this->realState->findOrFail($real_state_id);
         }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            $message = new ApiMessages($e->getMessage());
+            return response()->json([$message->getMessage()]);
         }
-
         return response()->json(['data'=>$realState], 200);
     }
 
     public function store(RealStateRequest $request){
         $data = $request->all();
-
-
         try {
             $realState = $this->realState->create($data);
            return response()->json([
@@ -42,10 +40,9 @@ class RealStateController extends Controller{
                ]
            ], 200);
         }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            $message = new ApiMessages($e->getMessage());
+            return response()->json([$message->getMessage()]);
         }
-
-        return response()->json($request->all(), 200);
     }
 
     public function update($real_state_id, RealStateRequest $request){
@@ -59,10 +56,9 @@ class RealStateController extends Controller{
                 ]
             ], 200);
         }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            $message = new ApiMessages($e->getMessage());
+            return response()->json([$message->getMessage()]);
         }
-
-        return response()->json($request->all(), 200);
     }
 
     public function destroy($real_state_id){
@@ -75,9 +71,8 @@ class RealStateController extends Controller{
                 ]
             ], 200);
         }catch (\Exception $e){
-            return response()->json(['error' => $e->getMessage()]);
+            $message = new ApiMessages($e->getMessage());
+            return response()->json([$message->getMessage()]);
         }
-
-        return response()->json($request->all(), 200);
     }
 }
