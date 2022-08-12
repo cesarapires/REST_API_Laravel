@@ -33,7 +33,10 @@ class RealStateController extends Controller{
     public function store(RealStateRequest $request){
         $data = $request->all();
         try {
-            $realState = $this->realState->create($data);
+           $realState = $this->realState->create($data);
+           if (isset($data['categories']) && count($data['categories'])){
+               $realState->categories()->sync($data['categories']);
+           }
            return response()->json([
                'data'=>[
                    'msg'=>'Imóvel Cadastrado com sucesso!'
@@ -50,6 +53,9 @@ class RealStateController extends Controller{
         try {
             $realState = $this->realState->findOrFail($real_state_id);
             $realState->update($data);
+            if (isset($data['categories']) && count($data['categories'])){
+                $realState->categories()->sync($data['categories']);
+            }
             return response()->json([
                 'data'=>[
                     'msg'=>'Imóvel Alterado com sucesso!'

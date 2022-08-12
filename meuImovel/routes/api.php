@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\api\CategoryController;
 use App\Http\Controllers\api\RealStateController;
 use App\Http\Controllers\api\UserController;
 use Illuminate\Http\Request;
@@ -26,5 +27,9 @@ Route::prefix('v1')->group(function(){
     });
     Route::name('users.')->group(function(){
         Route::resource('users', UserController::class);
+    });
+    Route::name('categories.')->group(function(){
+        Route::get('categories/{id}/real-states', [CategoryController::class, 'realState']);
+        Route::resource('categories', CategoryController::class);
     });
 });
